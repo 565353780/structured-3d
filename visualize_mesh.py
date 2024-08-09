@@ -218,7 +218,7 @@ def visualize_mesh(args):
         corner_i, corner_j = junctions[i], junctions[j]
 
         flip = verify_normal(corner_i, corner_j, delta_height, walls_normal[tuple(sorted([i, j]))])
-        
+
         if flip:
             corner_j, corner_i = corner_i, corner_j
 
