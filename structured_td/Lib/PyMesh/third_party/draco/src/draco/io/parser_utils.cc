@@ -18,6 +18,7 @@
 #include <cctype>
 #include <cmath>
 #include <iterator>
+#include <limits>
 
 namespace draco {
 namespace parser {
@@ -54,10 +55,10 @@ bool PeekWhitespace(DecoderBuffer *buffer, bool *end_reached) {
   uint8_t c;
   if (!buffer->Peek(&c)) {
     *end_reached = true;
-    return false;  // eof reached.
+    return false; // eof reached.
   }
   if (!isspace(c))
-    return false;  // Non-whitespace character reached.
+    return false; // Non-whitespace character reached.
   return true;
 }
 
@@ -67,7 +68,7 @@ void SkipLine(DecoderBuffer *buffer) {
     // Skip the character.
     buffer->Advance(1);
     if (c == '\n')
-      return;  // Return at the end of line
+      return; // Return at the end of line
   }
 }
 
@@ -120,7 +121,7 @@ bool ParseFloat(DecoderBuffer *buffer, float *value) {
   } else {
     // Handle exponent if present.
     if (ch == 'e' || ch == 'E') {
-      buffer->Advance(1);  // Skip 'e' marker.
+      buffer->Advance(1); // Skip 'e' marker.
 
       // Parse integer exponent.
       int32_t exponent = 0;
@@ -199,9 +200,9 @@ void ParseLine(DecoderBuffer *buffer, std::string *out_string) {
     // Skip the character.
     buffer->Advance(1);
     if (c == '\n')
-      return;  // Return at the end of line.
+      return; // Return at the end of line.
     if (c == '\r')
-      continue;  // Ignore extra line ending characters.
+      continue; // Ignore extra line ending characters.
     *out_string += c;
   }
 }
@@ -213,9 +214,9 @@ DecoderBuffer ParseLineIntoDecoderBuffer(DecoderBuffer *buffer) {
     // Skip the character.
     buffer->Advance(1);
     if (c == '\n')
-      break;  // End of the line reached.
+      break; // End of the line reached.
     if (c == '\r')
-      continue;  // Ignore extra line ending characters.
+      continue; // Ignore extra line ending characters.
   }
   DecoderBuffer out_buffer;
   out_buffer.Init(head, buffer->data_head() - head);
@@ -228,5 +229,5 @@ std::string ToLower(const std::string &str) {
   return out;
 }
 
-}  // namespace parser
-}  // namespace draco
+} // namespace parser
+} // namespace draco
