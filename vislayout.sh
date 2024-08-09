@@ -1,4 +1,4 @@
-python visualize_mesh.py \
+python visualize_layout.py \
   --path /home/chli/chLi/Dataset/Structured3D/Structured3D \
   --scene 00000 \
-  --room 485142
+  --type perspective # perspective/panorama

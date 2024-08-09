@@ -5,11 +5,11 @@ import argparse
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, mapping
 from descartes.patch import PolygonPatch
 
-from misc.panorama import draw_boundary_from_cor_id
-from misc.colors import colormap_255
+from structured_td.misc.panorama import draw_boundary_from_cor_id
+from structured_td.misc.colors import colormap_255
 
 
 def visualize_panorama(args):
@@ -62,7 +62,8 @@ def visualize_perspective(args):
                     if len(planes[key]):
                         for plane in planes[key]:
                             polygon = Polygon([annos['junctions'][id]['coordinate'] for id in plane])
-                            patch = PolygonPatch(polygon, facecolor=colors[i], alpha=0.5)
+                            geojson_data = mapping(polygon)
+                            patch = PolygonPatch(geojson_data, facecolor=colors[i], alpha=0.5)
                             ax.add_patch(patch)
 
                 plt.title(key)
