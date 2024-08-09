@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Polygon, mapping
 from descartes.patch import PolygonPatch
 
-from misc.figures import plot_coords
-from misc.colors import colormap_255, semantics_cmap
+from structured_td.misc.figures import plot_coords
+from structured_td.misc.colors import colormap_255, semantics_cmap
 
 
 def visualize_wireframe(annos):
@@ -95,7 +95,7 @@ def triangulate(points):
     """
 
     num_points = len(points)
-    indices = np.arange(num_points, dtype=np.int)
+    indices = np.arange(num_points, dtype=int)
     segments = np.vstack((indices, np.roll(indices, -1))).T
 
     tri = pymesh.triangle()
