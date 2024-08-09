@@ -1,9 +1,10 @@
 import numpy as np
 import open3d as o3d
+from typing import Tuple
 
 from structured_td.Config.colors import colormap_255
 
-def toO3DWireFrame(annos):
+def toO3DWireFrame(annos: dict) -> Tuple[o3d.geometry.PointCloud, o3d.geometry.LineSet]:
     """visualize wireframe
     """
     colormap = np.array(colormap_255) / 255

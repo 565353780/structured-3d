@@ -132,3 +132,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# compiled
+__pycache__
+
+# output
+output
