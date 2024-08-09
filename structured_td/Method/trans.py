@@ -1,8 +1,4 @@
-"""
-Adapted from https://github.com/thusiyuan/cooperative_scene_parsing/blob/master/utils/sunrgbd_utils.py
-"""
 import numpy as np
-
 
 def normalize(vector):
     return vector / np.linalg.norm(vector)
@@ -42,7 +38,6 @@ def flip_towards_viewer(normals, points):
     normals[flip, :] = -normals[flip, :]
     return normals
 
-
 def get_corners_of_bb3d(basis, coeffs, centroid):
     corners = np.zeros((8, 3))
     # order the basis
@@ -67,7 +62,6 @@ def get_corners_of_bb3d(basis, coeffs, centroid):
     corners = corners + np.tile(centroid, (8, 1))
     return corners
 
-
 def get_corners_of_bb3d_no_index(basis, coeffs, centroid):
     corners = np.zeros((8, 3))
     coeffs = np.abs(coeffs)
@@ -83,7 +77,6 @@ def get_corners_of_bb3d_no_index(basis, coeffs, centroid):
 
     corners = corners + np.tile(centroid, (8, 1))
     return corners
-
 
 def project_3d_points_to_2d(points3d, R_ex, K):
     """

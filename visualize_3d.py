@@ -6,11 +6,11 @@ import open3d
 import pymesh
 import numpy as np
 import matplotlib.pyplot as plt
-from shapely.geometry import Polygon, mapping
 from descartes.patch import PolygonPatch
+from shapely.geometry import Polygon, mapping
 
-from structured_td.misc.figures import plot_coords
-from structured_td.misc.colors import colormap_255, semantics_cmap
+from structured_td.Method.figures import plot_coords
+from structured_td.Config.colors import colormap_255, semantics_cmap
 
 
 def visualize_wireframe(annos):

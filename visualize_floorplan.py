@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Polygon
 from shapely.plotting import plot_polygon
 
-from structured_td.misc.colors import semantics_cmap
-from structured_td.misc.utils import get_corners_of_bb3d_no_index
+from structured_td.Config.colors import semantics_cmap
+from structured_td.Method.trans import get_corners_of_bb3d_no_index
 
 
 def convert_lines_to_vertices(lines):

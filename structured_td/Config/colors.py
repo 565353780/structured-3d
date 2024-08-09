@@ -1,3 +1,16 @@
+BLUE = '#6699cc'
+GRAY = '#999999'
+DARKGRAY = '#333333'
+YELLOW = '#ffcc33'
+GREEN = '#339933'
+RED = '#ff3333'
+BLACK = '#000000'
+
+COLOR_ISVALID = {
+    True: BLUE,
+    False: RED,
+}
+
 semantics_cmap = {
     'living room': '#e6194b',
     'kitchen': '#3cb44b',

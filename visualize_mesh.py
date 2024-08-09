@@ -6,8 +6,8 @@ import numpy as np
 import open3d as o3d
 from panda3d.core import Triangulator
 
-from structured_td.misc.panorama import xyz_2_coorxy
 from visualize_3d import convert_lines_to_vertices
+from structured_td.Method.panorama import xyz_2_coorxy
 
 
 def E2P(image, corner_i, corner_j, wall_height, camera, resolution=512, is_wall=True):

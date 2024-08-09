@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Polygon, mapping
 from descartes.patch import PolygonPatch
 
-from structured_td.misc.panorama import draw_boundary_from_cor_id
-from structured_td.misc.colors import colormap_255
+from structured_td.Config.colors import colormap_255
+from structured_td.Method.panorama import draw_boundary_from_cor_id
 
 
 def visualize_panorama(args):

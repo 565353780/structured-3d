@@ -1,6 +1,3 @@
-"""
-Copy from https://github.com/sunset1995/pytorch-layoutnet/blob/master/pano.py
-"""
 import numpy as np
 import numpy.matlib as matlib
 

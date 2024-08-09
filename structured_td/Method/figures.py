@@ -1,27 +1,6 @@
-"""
-Copy from https://github.com/Toblerity/Shapely/blob/master/docs/code/figures.py
-"""
-
-from math import sqrt
 from shapely import affinity
 
-GM = (sqrt(5)-1.0)/2.0
-W = 8.0
-H = W*GM
-SIZE = (W, H)
-
-BLUE = '#6699cc'
-GRAY = '#999999'
-DARKGRAY = '#333333'
-YELLOW = '#ffcc33'
-GREEN = '#339933'
-RED = '#ff3333'
-BLACK = '#000000'
-
-COLOR_ISVALID = {
-    True: BLUE,
-    False: RED,
-}
+from structured_td.Config.colors import BLUE, GRAY, YELLOW, RED, BLACK
 
 
 def plot_line(ax, ob, color=GRAY, zorder=1, linewidth=3, alpha=1):
