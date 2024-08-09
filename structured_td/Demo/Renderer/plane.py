@@ -23,11 +23,15 @@ def demo():
                                             width, height,
                                             left, top, visible)
     for i in range(10):
+        if i in [5]:
+            continue
+
         scene_id = str(i).zfill(5)
         save_folder_path = "./output/images/" + scene_id + "/plane/"
         save_video_file_path = "./output/video/plane/" + scene_id + ".mp4"
 
         print('start process scene', scene_id, '...')
-        plane_renderer.loadScene(scene_id)
+        if not plane_renderer.loadScene(scene_id):
+            continue
         plane_renderer.renderVideo(save_folder_path, save_video_file_path, rotate_one_cycle_second, fps, overwrite)
     return True

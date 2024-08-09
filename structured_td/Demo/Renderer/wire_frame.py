@@ -28,6 +28,7 @@ def demo():
         save_video_file_path = "./output/video/wire_frame/" + scene_id + ".mp4"
 
         print('start process scene', scene_id, '...')
-        wire_frame_renderer.loadScene(scene_id)
+        if not wire_frame_renderer.loadScene(scene_id):
+            continue
         wire_frame_renderer.renderVideo(save_folder_path, save_video_file_path, rotate_one_cycle_second, fps, overwrite)
     return True
