@@ -48,8 +48,8 @@ def renderWireFrame(annos: dict) -> bool:
     o3d.visualization.draw_geometries([junction_set, line_set])
     return True
 
-def renderPlane(annos: dict, args, eps=0.9) -> bool:
-    plane_set = toO3DPlane(annos, args, eps)
+def renderPlane(annos: dict, color_mode: str = 'normal', eps: float =0.9) -> bool:
+    plane_set = toO3DPlane(annos, color_mode, eps)
     draw_geometries_with_back_face(plane_set)
     return True
 

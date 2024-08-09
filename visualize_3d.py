@@ -27,7 +27,7 @@ def main():
     if args.type == "wireframe":
         renderWireFrame(annos)
     elif args.type == "plane":
-        renderPlane(annos, args)
+        renderPlane(annos, args.color)
     elif args.type == "floorplan":
         renderFloorPlan(annos)
 

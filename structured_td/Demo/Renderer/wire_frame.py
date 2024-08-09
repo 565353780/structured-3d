@@ -16,16 +16,18 @@ def demo():
     save_video_file_path = "./output/video/wire_frame/" + scene_id + ".mp4"
     rotate_one_cycle_second = 10.0
     fps = 30
-    overwrite = True
+    overwrite = False
 
     wire_frame_renderer = WireFrameRenderer(dataset_folder_path,
                                             window_name,
                                             width, height,
                                             left, top, visible)
-    for i in range(100):
+    for i in range(20):
         scene_id = str(i).zfill(5)
         save_folder_path = "./output/images/" + scene_id + "/wire_frame/"
         save_video_file_path = "./output/video/wire_frame/" + scene_id + ".mp4"
+
+        print('start process scene', scene_id, '...')
         wire_frame_renderer.loadScene(scene_id)
         wire_frame_renderer.renderVideo(save_folder_path, save_video_file_path, rotate_one_cycle_second, fps, overwrite)
     return True

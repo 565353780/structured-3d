@@ -1,17 +1,18 @@
 import os
 import json
+import open3d as o3d
 from math import ceil
 from tqdm import trange
 
 from open3d_manage.Method.video import createVideoFromImages
 
-from structured_td.Method.wire_frame import toO3DWireFrame
+from structured_td.Method.plane import toO3DPlane
 from structured_td.Module.Renderer.o3d import O3DRenderer
 
-class WireFrameRenderer(object):
+class PlaneRenderer(object):
     def __init__(self,
                  dataset_folder_path: str,
-        window_name: str = "WireFrameRenderer",
+        window_name: str = "PlaneRenderer",
         width: int = 1920,
         height: int = 1080,
         left: int = 50,
@@ -29,7 +30,7 @@ class WireFrameRenderer(object):
     def loadScene(self, scene_id: str) -> bool:
         json_file_path = self.dataset_folder_path + "scene_" + scene_id + "/annotation_3d.json"
         if not os.path.exists(json_file_path):
-            print("[ERROR][WireFrameRenderer::loadScene]")
+            print("[ERROR][PlaneRenderer::loadScene]")
             print('\t json file not exist!')
             print('\t json_file_path:', json_file_path)
             return False
@@ -37,11 +38,13 @@ class WireFrameRenderer(object):
         with open(json_file_path) as file:
             annos = json.load(file)
 
-            junction_set, line_set = toO3DWireFrame(annos)
+            plane_set = toO3DPlane(annos)
 
-            geometries = [junction_set, line_set]
+            combined_mesh = o3d.geometry.TriangleMesh()
+            for mesh in plane_set:
+                combined_mesh += mesh
 
-            self.renderer.loadGeometries(geometries, self.z_rotate_angle, self.y_rotate_angle, self.x_rotate_angle)
+            self.renderer.loadGeometries([combined_mesh], self.z_rotate_angle, self.y_rotate_angle, self.x_rotate_angle)
         return True
 
     def renderImages(self,
@@ -69,14 +72,14 @@ class WireFrameRenderer(object):
                     fps: int = 30,
                     overwrite: bool = False) -> bool:
         if not self.renderImages(save_folder_path, rotate_one_cycle_second, fps, overwrite):
-            print('[ERROR][WireFrameRenderer::renderVideo]')
+            print('[ERROR][PlaneRenderer::renderVideo]')
             print('\t renderImages failed!')
             return False
 
         bg_color = [255, 255, 255]
 
         if not createVideoFromImages(save_folder_path, save_video_file_path, bg_color, fps, overwrite):
-            print('[ERROR][WireFrameRenderer::renderVideo]')
+            print('[ERROR][PlaneRenderer::renderVideo]')
             print('\t createVideoFromImages failed!')
             return False
 

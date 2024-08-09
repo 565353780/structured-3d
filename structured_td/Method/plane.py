@@ -4,12 +4,12 @@ import open3d as o3d
 from structured_td.Config.colors import colormap_255
 from structured_td.Method.polygon import convert_lines_to_vertices, clip_polygon
 
-def toO3DPlane(annos, args, eps=0.9):
+def toO3DPlane(annos, color_mode: str = 'normal', eps: float=0.9, double_side_face: bool = True):
     colormap = np.array(colormap_255) / 255
     junctions = [item['coordinate'] for item in annos['junctions']]
 
-    if args.color == 'manhattan':
-        manhattan = dict()
+    manhattan = dict()
+    if color_mode == 'manhattan':
         for planes in annos['manhattan']:
             for planeID in planes['planeID']:
                 manhattan[planeID] = planes['ID']
@@ -47,7 +47,7 @@ def toO3DPlane(annos, args, eps=0.9):
         plane_vis.vertices = o3d.utility.Vector3dVector(vertices)
         plane_vis.triangles = o3d.utility.Vector3iVector(faces)
 
-        if args.color == 'normal':
+        if color_mode == 'normal':
             if np.dot(normal, [1, 0, 0]) > eps:
                 plane_vis.paint_uniform_color(colormap[0])
             elif np.dot(normal, [-1, 0, 0]) > eps:
@@ -62,7 +62,7 @@ def toO3DPlane(annos, args, eps=0.9):
                 plane_vis.paint_uniform_color(colormap[5])
             else:
                 plane_vis.paint_uniform_color(colormap[6])
-        elif args.color == 'manhattan':
+        elif color_mode == 'manhattan':
             # paint each plane with manhattan world
             if planeID not in manhattan.keys():
                 plane_vis.paint_uniform_color(colormap[6])
@@ -70,5 +70,35 @@ def toO3DPlane(annos, args, eps=0.9):
                 plane_vis.paint_uniform_color(colormap[manhattan[planeID]])
 
         plane_set.append(plane_vis)
+
+        if double_side_face:
+            plane_vis_opposite = o3d.geometry.TriangleMesh()
+
+            plane_vis_opposite.vertices = o3d.utility.Vector3dVector(vertices)
+            plane_vis_opposite.triangles = o3d.utility.Vector3iVector(faces[:, [0, 2, 1]])
+
+            if color_mode == 'normal':
+                if np.dot(normal, [1, 0, 0]) > eps:
+                    plane_vis_opposite.paint_uniform_color(colormap[0])
+                elif np.dot(normal, [-1, 0, 0]) > eps:
+                    plane_vis_opposite.paint_uniform_color(colormap[1])
+                elif np.dot(normal, [0, 1, 0]) > eps:
+                    plane_vis_opposite.paint_uniform_color(colormap[2])
+                elif np.dot(normal, [0, -1, 0]) > eps:
+                    plane_vis_opposite.paint_uniform_color(colormap[3])
+                elif np.dot(normal, [0, 0, 1]) > eps:
+                    plane_vis_opposite.paint_uniform_color(colormap[4])
+                elif np.dot(normal, [0, 0, -1]) > eps:
+                    plane_vis_opposite.paint_uniform_color(colormap[5])
+                else:
+                    plane_vis_opposite.paint_uniform_color(colormap[6])
+            elif color_mode == 'manhattan':
+                # paint each plane with manhattan world
+                if planeID not in manhattan.keys():
+                    plane_vis_opposite.paint_uniform_color(colormap[6])
+                else:
+                    plane_vis_opposite.paint_uniform_color(colormap[manhattan[planeID]])
+
+            plane_set.append(plane_vis_opposite)
 
     return plane_set
