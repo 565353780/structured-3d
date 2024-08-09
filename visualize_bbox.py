@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-from misc.utils import get_corners_of_bb3d_no_index, project_3d_points_to_2d, parse_camera_info
+from structured_td.misc.utils import get_corners_of_bb3d_no_index, project_3d_points_to_2d, parse_camera_info
 
 
 def visualize_bbox(args):

@@ -1,15 +1,14 @@
-import argparse
-import json
 import os
-
-import matplotlib.pyplot as plt
+import json
+import argparse
 import numpy as np
 from matplotlib import colors
+import matplotlib.pyplot as plt
 from shapely.geometry import Polygon
 from shapely.plotting import plot_polygon
 
-from misc.colors import semantics_cmap
-from misc.utils import get_corners_of_bb3d_no_index
+from structured_td.misc.colors import semantics_cmap
+from structured_td.misc.utils import get_corners_of_bb3d_no_index
 
 
 def convert_lines_to_vertices(lines):
