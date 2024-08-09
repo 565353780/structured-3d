@@ -6,7 +6,7 @@ import open3d
 import pymesh
 import numpy as np
 import matplotlib.pyplot as plt
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, mapping
 from descartes.patch import PolygonPatch
 
 from misc.figures import plot_coords
@@ -276,11 +276,12 @@ def plot_floorplan(annos, polygons):
     junctions = np.array([junc['coordinate'][:2] for junc in annos['junctions']])
     for (polygon, poly_type) in polygons:
         polygon = Polygon(junctions[np.array(polygon)])
+        geojson_data = mapping(polygon)
         plot_coords(ax, polygon.exterior, alpha=0.5)
         if poly_type == 'outwall':
-            patch = PolygonPatch(polygon, facecolor=semantics_cmap[poly_type], alpha=0)
+            patch = PolygonPatch(geojson_data, facecolor=semantics_cmap[poly_type], alpha=0)
         else:
-            patch = PolygonPatch(polygon, facecolor=semantics_cmap[poly_type], alpha=0.5)
+            patch = PolygonPatch(geojson_data, facecolor=semantics_cmap[poly_type], alpha=0.5)
         ax.add_patch(patch)
 
     plt.axis('equal')
