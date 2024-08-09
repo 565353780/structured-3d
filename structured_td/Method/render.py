@@ -40,7 +40,7 @@ def plot_floorplan(annos, polygons):
 
     plt.axis('equal')
     plt.axis('off')
-    plt.show()
+    # plt.show()
     return True
 
 def renderWireFrame(annos: dict) -> bool:
@@ -56,4 +56,6 @@ def renderPlane(annos: dict, color_mode: str = 'normal', eps: float =0.9) -> boo
 def renderFloorPlan(annos: dict) -> bool:
     polygons = toFloorPlan(annos)
     plot_floorplan(annos, polygons)
+    plt.show()
+    plt.close()
     return True
