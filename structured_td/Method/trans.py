@@ -3,7 +3,6 @@ import numpy as np
 def normalize(vector):
     return vector / np.linalg.norm(vector)
 
-
 def parse_camera_info(camera_info, height, width):
     """ extract intrinsic and extrinsic matrix
     """
@@ -129,3 +128,26 @@ def project_struct_bdb_to_2d(basis, coeffs, center, R_ex, K):
     # if not check_bdb(bdb2d, 2*K[0, 2], 2*K[1, 2]):
     #     bdb2d = None
     return bdb2d
+
+def project(x, meta):
+    """ project 3D to 2D for polygon clipping
+    """
+    proj_axis = max(range(3), key=lambda i: abs(meta['normal'][i]))
+
+    return tuple(c for i, c in enumerate(x) if i != proj_axis)
+
+
+def project_inv(x, meta):
+    """ recover 3D points from 2D
+    """
+    # Returns the vector w in the walls' plane such that project(w) equals x.
+    proj_axis = max(range(3), key=lambda i: abs(meta['normal'][i]))
+
+    w = list(x)
+    w[proj_axis:proj_axis] = [0.0]
+    c = -meta['offset']
+    for i in range(3):
+        c -= w[i] * meta['normal'][i]
+    c /= meta['normal'][proj_axis]
+    w[proj_axis] = c
+    return tuple(w)
