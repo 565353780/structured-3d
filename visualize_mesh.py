@@ -1,13 +1,12 @@
 import os
+import cv2
 import json
 import argparse
-
-import cv2
-import open3d
 import numpy as np
+import open3d as o3d
 from panda3d.core import Triangulator
 
-from misc.panorama import xyz_2_coorxy
+from structured_td.misc.panorama import xyz_2_coorxy
 from visualize_3d import convert_lines_to_vertices
 
 
@@ -114,15 +113,22 @@ def create_plane_mesh(vertices, vertices_floor, textures, texture_floor, texture
 
     triangle_uvs = np.concatenate(triangle_uvs, axis=0)
 
-    mesh = open3d.geometry.TriangleMesh(
-        vertices=open3d.utility.Vector3dVector(vertices),
-        triangles=open3d.utility.Vector3iVector(triangles)
+    mesh = o3d.geometry.TriangleMesh(
+        vertices=o3d.utility.Vector3dVector(vertices),
+        triangles=o3d.utility.Vector3iVector(triangles)
     )
     mesh.compute_vertex_normals()
 
-    mesh.texture = open3d.geometry.Image(textures)
-    mesh.triangle_uvs = np.array(triangle_uvs[triangles.reshape(-1), :], dtype=np.float64)
-    return mesh
+    textures = o3d.geometry.Image(textures)
+    mesh.textures = [textures]
+
+    triangle_uvs = np.asarray(triangle_uvs[triangles.reshape(-1), :], dtype=np.float64)
+    mesh.triangle_uvs = o3d.utility.Vector2dVector(triangle_uvs)
+    mesh.triangle_material_ids = o3d.utility.IntVector(np.array([np.int32(0)]))
+    mat = o3d.visualization.rendering.MaterialRecord()
+    mat.albedo_img = textures
+
+    return mesh, mat
 
 
 def verify_normal(corner_i, corner_j, delta_height, plane_normal):
@@ -232,11 +238,11 @@ def visualize_mesh(args):
     texture_ceiling = E2P(image, corner_min, corner_max, wall_height, camera_center, is_wall=False)
 
     # create mesh
-    mesh = create_plane_mesh(corners, corner_floor, textures, texture_floor, texture_ceiling,
+    mesh, mat = create_plane_mesh(corners, corner_floor, textures, texture_floor, texture_ceiling,
         delta_height, ignore_ceiling=args.ignore_ceiling)
 
     # visualize mesh
-    open3d.visualization.draw_geometries([mesh])
+    o3d.visualization.draw({'name': 'test_mesh', 'geometry': mesh, 'material': mat})
 
 
 def parse_args():
