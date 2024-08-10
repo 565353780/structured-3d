@@ -8,7 +8,7 @@ def demo():
 
     panorama_renderer = PanoramaRenderer(dataset_folder_path)
 
-    for i in range(100):
+    for i in range(2):
         scene_id = str(i).zfill(5)
 
         print('start process scene', scene_id, '...')

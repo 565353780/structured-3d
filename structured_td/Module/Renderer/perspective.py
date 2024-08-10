@@ -52,6 +52,8 @@ class PerspectiveRenderer(object):
             if not os.path.exists(perspective_folder_path):
                 continue
 
+            # self.copyImagesWithTags(scene_id, perspective_folder_path, 'empty', 'rgb_rawlight', save_folder_path, overwrite)
             self.copyImagesWithTags(scene_id, perspective_folder_path, 'full', 'rgb_rawlight', save_folder_path, overwrite)
-            self.copyImagesWithTags(scene_id, perspective_folder_path, 'empty', 'rgb_rawlight', save_folder_path, overwrite)
+            self.copyImagesWithTags(scene_id, perspective_folder_path, 'full', 'semantic', save_folder_path, overwrite)
+            self.copyImagesWithTags(scene_id, perspective_folder_path, 'full', 'normal', save_folder_path, overwrite)
         return True
