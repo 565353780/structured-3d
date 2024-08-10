@@ -17,9 +17,11 @@ class PanoramaRenderer(object):
             removeFile(save_tag_file_path)
 
         tag_file_path = panorama_folder_path + tag + '.png'
-        if os.path.exists(tag_file_path):
-            createFileFolder(save_tag_file_path)
-            copyfile(tag_file_path, save_tag_file_path)
+        if not os.path.exists(tag_file_path):
+            return True
+
+        createFileFolder(save_tag_file_path)
+        copyfile(tag_file_path, save_tag_file_path)
         return True
 
     def loadScene(self, scene_id: str,
