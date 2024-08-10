@@ -3,10 +3,9 @@ import numpy as np
 import open3d as o3d
 from copy import deepcopy
 
-
-from open3d_manage.Method.path import createFileFolder
 from open3d_manage.Module.o3d_viewer import O3DViewer
 
+from structured_td.Method.path import createFileFolder
 
 class O3DRenderer(object):
     def __init__(

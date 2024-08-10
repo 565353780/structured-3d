@@ -2,8 +2,8 @@ import os
 import json
 import matplotlib.pyplot as plt
 
-from open3d_manage.Method.path import createFileFolder
 
+from structured_td.Method.path import createFileFolder
 from structured_td.Method.floor_plan import toFloorPlan
 from structured_td.Method.render import plot_floorplan
 

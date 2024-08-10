@@ -22,7 +22,7 @@ def demo():
                                             window_name,
                                             width, height,
                                             left, top, visible)
-    for i in range(20):
+    for i in range(200):
         scene_id = str(i).zfill(5)
         save_folder_path = "./output/images/" + scene_id + "/wire_frame/"
         save_video_file_path = "./output/video/wire_frame/" + scene_id + ".mp4"

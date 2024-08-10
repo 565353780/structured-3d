@@ -10,7 +10,7 @@ def demo():
 
     floor_plan_renderer = FloorPlanRenderer(dataset_folder_path)
 
-    for i in range(100):
+    for i in range(1000):
         scene_id = str(i).zfill(5)
         save_image_file_path = "./output/images/floor_plan/" + scene_id + ".png"
 

@@ -22,7 +22,7 @@ def demo():
                                             window_name,
                                             width, height,
                                             left, top, visible)
-    for i in range(10):
+    for i in range(200):
         if i in [5]:
             continue
 
