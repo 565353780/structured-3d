@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 from structured_td.Method.path import createFileFolder
 from structured_td.Method.floor_plan import toFloorPlan
-from structured_td.Method.render import plotFloorplan
+from structured_td.Method.render import drawPanoramaLayout, plotPerspectiveLayout
 
-class FloorPlanRenderer(object):
+class LayoutRenderer(object):
     def __init__(self, dataset_folder_path: str) -> None:
         self.dataset_folder_path = dataset_folder_path
         return
@@ -31,7 +31,7 @@ class FloorPlanRenderer(object):
 
             polygons = toFloorPlan(annos)
 
-            plotFloorplan(annos, polygons)
+            plot_floorplan(annos, polygons)
 
         createFileFolder(save_file_path)
 

@@ -1,40 +1,20 @@
 import os
-import json
 import argparse
 
-import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-from shapely.geometry import Polygon, mapping
-from descartes.patch import PolygonPatch
 
-from structured_td.Config.colors import colormap_255
-from structured_td.Method.panorama import draw_boundary_from_cor_id
+from structured_td.Method.render import renderPanoramaLayout, renderPerspectiveLayout
 
 
 def visualize_panorama(args):
-    """visualize panorama layout
-    """
     scene_path = os.path.join(args.path, f"scene_{args.scene:05d}", "2D_rendering")
 
     for room_id in np.sort(os.listdir(scene_path)):
         room_path = os.path.join(scene_path, room_id, "panorama")
 
-        cor_id = np.loadtxt(os.path.join(room_path, "layout.txt"))
-        img_src = cv2.imread(os.path.join(room_path, "full", "rgb_rawlight.png"))
-        img_src = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB)
-        img_viz = draw_boundary_from_cor_id(cor_id, img_src)
-
-        plt.axis('off')
-        plt.imshow(img_viz)
-        plt.show()
-
+        renderPanoramaLayout(room_path)
 
 def visualize_perspective(args):
-    """visualize perspective layout
-    """
-    colors = np.array(colormap_255) / 255
-
     scene_path = os.path.join(args.path, f"scene_{args.scene:05d}", "2D_rendering")
 
     for room_id in np.sort(os.listdir(scene_path)):
@@ -46,28 +26,7 @@ def visualize_perspective(args):
         for position_id in np.sort(os.listdir(room_path)):
             position_path = os.path.join(room_path, position_id)
 
-            image = cv2.imread(os.path.join(position_path, "rgb_rawlight.png"))
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-            with open(os.path.join(position_path, "layout.json")) as f:
-                annos = json.load(f)
-
-            fig = plt.figure()
-            for i, key in enumerate(['amodal_mask', 'visible_mask']):
-                ax = fig.add_subplot(2, 1, i + 1)
-                plt.axis('off')
-                plt.imshow(image)
-
-                for i, planes in enumerate(annos['planes']):
-                    if len(planes[key]):
-                        for plane in planes[key]:
-                            polygon = Polygon([annos['junctions'][id]['coordinate'] for id in plane])
-                            geojson_data = mapping(polygon)
-                            patch = PolygonPatch(geojson_data, facecolor=colors[i], alpha=0.5)
-                            ax.add_patch(patch)
-
-                plt.title(key)
-            plt.show()
+            renderPerspectiveLayout(position_path)
 
 
 def parse_args():

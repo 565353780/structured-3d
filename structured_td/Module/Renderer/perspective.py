@@ -1,7 +1,9 @@
 import os
 from shutil import copyfile
+import matplotlib.pyplot as plt
 
 from structured_td.Method.path import createFileFolder, removeFile
+from structured_td.Method.render import plotPerspectiveLayout
 
 class PerspectiveRenderer(object):
     def __init__(self, dataset_folder_path: str) -> None:
@@ -34,6 +36,36 @@ class PerspectiveRenderer(object):
             copyfile(image_file_path, save_image_file_path)
         return True
 
+    def renderLayouts(self, scene_id: str, perspective_folder_path: str, scene_tag: str, save_folder_path: str, overwrite: bool = False) -> bool:
+        scene_tag_folder_path = perspective_folder_path + scene_tag + '/'
+        if not os.path.exists(scene_tag_folder_path):
+            print('[WARN][PerspectiveRenderer::renderLayouts]')
+            print('\t scene tag folder not exist! will skip!')
+            print('\t scene_tag_folder_path:', scene_tag_folder_path)
+            return True
+
+        image_id_list = os.listdir(scene_tag_folder_path)
+
+        for image_id in image_id_list:
+            save_image_file_path = save_folder_path + '/perspective/' + scene_tag + '/layout/' + scene_id + '_' + image_id + '.png'
+            if os.path.exists(save_image_file_path):
+                if not overwrite:
+                    continue
+
+                removeFile(save_image_file_path)
+
+            position_folder_path = scene_tag_folder_path + image_id + '/'
+            if not os.path.exists(position_folder_path):
+                continue
+
+            plotPerspectiveLayout(position_folder_path)
+
+            createFileFolder(save_image_file_path)
+
+            plt.savefig(save_image_file_path, transparent=True, bbox_inches='tight')
+            plt.close()
+        return True
+
     def loadScene(self, scene_id: str,
                   save_folder_path: str,
                   overwrite: bool = False) -> bool:
@@ -56,4 +88,6 @@ class PerspectiveRenderer(object):
             self.copyImagesWithTags(scene_id, perspective_folder_path, 'full', 'rgb_rawlight', save_folder_path, overwrite)
             self.copyImagesWithTags(scene_id, perspective_folder_path, 'full', 'semantic', save_folder_path, overwrite)
             self.copyImagesWithTags(scene_id, perspective_folder_path, 'full', 'normal', save_folder_path, overwrite)
+            self.renderLayouts(scene_id, perspective_folder_path, 'full', save_folder_path, overwrite)
+
         return True

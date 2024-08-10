@@ -1,14 +1,18 @@
+import os
+import cv2
+import json
 import numpy as np
 import open3d as o3d
 import matplotlib.pyplot as plt
 from descartes.patch import PolygonPatch
 from shapely.geometry import Polygon, mapping
 
-from structured_td.Config.colors import semantics_cmap
+from structured_td.Config.colors import colormap_255, semantics_cmap
 from structured_td.Method.figures import plot_coords
 from structured_td.Method.wire_frame import toO3DWireFrame
 from structured_td.Method.plane import toO3DPlane
 from structured_td.Method.floor_plan import toFloorPlan
+from structured_td.Method.panorama import draw_boundary_from_cor_id
 
 def draw_geometries_with_back_face(geometries: list) -> bool:
     vis = o3d.visualization.Visualizer()
@@ -21,7 +25,7 @@ def draw_geometries_with_back_face(geometries: list) -> bool:
     vis.destroy_window()
     return True
 
-def plot_floorplan(annos, polygons):
+def plotFloorplan(annos, polygons):
     """plot floorplan
     """
     fig = plt.figure()
@@ -40,7 +44,39 @@ def plot_floorplan(annos, polygons):
 
     plt.axis('equal')
     plt.axis('off')
-    # plt.show()
+    return True
+
+def drawPanoramaLayout(room_path: str) -> np.ndarray:
+    cor_id = np.loadtxt(os.path.join(room_path, "layout.txt"))
+    img_src = cv2.imread(os.path.join(room_path, "full", "rgb_rawlight.png"))
+    img_src = cv2.cvtColor(img_src, cv2.COLOR_BGR2RGB)
+    img_viz = draw_boundary_from_cor_id(cor_id, img_src)
+    return img_viz
+
+def plotPerspectiveLayout(position_path: str) -> bool:
+    colors = np.array(colormap_255) / 255
+
+    image = cv2.imread(os.path.join(position_path, "rgb_rawlight.png"))
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    with open(os.path.join(position_path, "layout.json")) as f:
+        annos = json.load(f)
+
+    fig = plt.figure()
+    for i, key in enumerate(['amodal_mask', 'visible_mask']):
+        ax = fig.add_subplot(2, 1, i + 1)
+        plt.axis('off')
+        plt.imshow(image)
+
+        for i, planes in enumerate(annos['planes']):
+            if len(planes[key]):
+                for plane in planes[key]:
+                    polygon = Polygon([annos['junctions'][id]['coordinate'] for id in plane])
+                    geojson_data = mapping(polygon)
+                    patch = PolygonPatch(geojson_data, facecolor=colors[i], alpha=0.5)
+                    ax.add_patch(patch)
+
+        plt.title(key)
     return True
 
 def renderWireFrame(annos: dict) -> bool:
@@ -55,7 +91,21 @@ def renderPlane(annos: dict, color_mode: str = 'normal', eps: float =0.9) -> boo
 
 def renderFloorPlan(annos: dict) -> bool:
     polygons = toFloorPlan(annos)
-    plot_floorplan(annos, polygons)
+    plotFloorplan(annos, polygons)
+    plt.show()
+    plt.close()
+    return True
+
+def renderPanoramaLayout(room_path: str) -> bool:
+    image = drawPanoramaLayout(room_path)
+    plt.axis('off')
+    plt.imshow(image)
+    plt.show()
+    plt.close()
+    return True
+
+def renderPerspectiveLayout(position_path: str) -> bool:
+    plotPerspectiveLayout(position_path)
     plt.show()
     plt.close()
     return True
