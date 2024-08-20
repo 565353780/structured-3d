@@ -53,7 +53,15 @@ def drawPanoramaLayout(room_path: str) -> np.ndarray:
     img_viz = draw_boundary_from_cor_id(cor_id, img_src)
     return img_viz
 
-def plotPerspectiveLayout(position_path: str) -> bool:
+def plotPerspectiveLayout(position_path: str, mask_mode: str = 'visible_mask') -> bool:
+    valid_mask_modes = ['visible_mask', 'amodal_mask']
+    if mask_mode not in valid_mask_modes:
+        print('[ERROR][render::plotPerspectiveLayout]')
+        print('\t mask mode not valid!')
+        print('\t mask_mode:', mask_mode)
+        print('\t valid mask modes are:', valid_mask_modes)
+        return False
+
     colors = np.array(colormap_255) / 255
 
     image = cv2.imread(os.path.join(position_path, "rgb_rawlight.png"))
@@ -63,20 +71,19 @@ def plotPerspectiveLayout(position_path: str) -> bool:
         annos = json.load(f)
 
     fig = plt.figure()
-    for i, key in enumerate(['amodal_mask', 'visible_mask']):
-        ax = fig.add_subplot(2, 1, i + 1)
-        plt.axis('off')
-        plt.imshow(image)
+    ax = fig.add_subplot(2, 1, 1)
+    plt.axis('off')
+    plt.imshow(image)
 
-        for i, planes in enumerate(annos['planes']):
-            if len(planes[key]):
-                for plane in planes[key]:
-                    polygon = Polygon([annos['junctions'][id]['coordinate'] for id in plane])
-                    geojson_data = mapping(polygon)
-                    patch = PolygonPatch(geojson_data, facecolor=colors[i], alpha=0.5)
-                    ax.add_patch(patch)
+    for i, planes in enumerate(annos['planes']):
+        if len(planes[mask_mode]):
+            for plane in planes[mask_mode]:
+                polygon = Polygon([annos['junctions'][id]['coordinate'] for id in plane])
+                geojson_data = mapping(polygon)
+                patch = PolygonPatch(geojson_data, facecolor=colors[i], alpha=0.5)
+                ax.add_patch(patch)
 
-        plt.title(key)
+    # plt.title(key)
     return True
 
 def renderWireFrame(annos: dict) -> bool:

@@ -6,6 +6,7 @@ from tqdm import trange
 
 from open3d_manage.Method.video import createVideoFromImages
 
+from structured_td.Method.path import createFileFolder, removeFile
 from structured_td.Method.plane import toO3DPlane
 from structured_td.Module.Renderer.o3d import O3DRenderer
 
@@ -45,6 +46,18 @@ class PlaneRenderer(object):
                 combined_mesh += mesh
 
             self.renderer.loadGeometries([combined_mesh], self.z_rotate_angle, self.y_rotate_angle, self.x_rotate_angle)
+        return True
+
+    def saveSceneMesh(self, save_file_path: str, overwrite: bool = False) -> bool:
+        if os.path.exists(save_file_path):
+            if not overwrite:
+                return True
+
+            removeFile(save_file_path)
+
+        createFileFolder(save_file_path)
+
+        o3d.io.write_triangle_mesh(save_file_path, self.renderer.geometries[0], write_ascii=True)
         return True
 
     def renderImages(self,

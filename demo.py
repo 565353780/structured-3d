@@ -8,7 +8,7 @@ from structured_td.Demo.Renderer.depth import demo as demo_render_depth
 if __name__ == "__main__":
     # demo_render_wire_frame()
     # demo_render_floor_plan()
-    # demo_render_plane()
+    demo_render_plane()
     # demo_render_panorama()
     demo_render_perspective()
     demo_render_depth()
